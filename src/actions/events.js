@@ -13,3 +13,8 @@ export const eventAddNew = (event) => ({
 export const eventClearActiveNote = () => ({
   type: types.eventClearActiveNote,
 })
+
+export const eventUpdated = (event) => ({
+  type: types.eventUpdated,
+  payload: event,
+})
