@@ -47,6 +47,8 @@ export const CalendarModal = () => {
   useEffect(() => {
     if (!!activeEvent) {
       setFormValues(activeEvent)
+    } else {
+      setFormValues(initValue)
     }
   }, [activeEvent, setFormValues])
 
@@ -107,7 +109,6 @@ export const CalendarModal = () => {
       }))
     }
 
-
     setTitleValid(true)
     closeModal()
   }
@@ -120,7 +121,7 @@ export const CalendarModal = () => {
       onRequestClose={closeModal}
       style={customStyles}
     >
-      <h1> Nuevo evento </h1>
+      <h1> {!!activeEvent ? 'Editar evento' : 'Crear un evento'} </h1>
       <hr />
       <form className="container" onSubmit={handleSubmit}>
 
