@@ -46,3 +46,14 @@
 .react-datetime-picker__wrapper {
   border: 0 !important;
 }
+
+.fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 100%;
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Modal from 'react-modal'
 import DateTimePicker from 'react-datetime-picker'
@@ -6,6 +6,7 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 
 import { setCloseModal } from '../../actions/ui'
+import { eventAddNew, eventClearActiveNote } from '../../actions/events'
 
 const customStyles = {
   content: {
@@ -22,23 +23,33 @@ Modal.setAppElement('#root')
 const now = moment().minutes(0).seconds(0).add(1, 'hours')
 const nowPlusOne = now.clone().add(1, 'hours')
 
+const initValue = {
+  title: '',
+  notes: '',
+  start: now.toDate(),
+  end: nowPlusOne.toDate(),
+}
+
 export const CalendarModal = () => {
 
   const { modalOpen } = useSelector(state => state.ui)
+  const { activeEvent } = useSelector(state => state.calendar)
   const dispatch = useDispatch()
 
   const [dateStart, setDateStart] = useState(now.toDate())
   const [dateEnd, setDateEnd] = useState(nowPlusOne.toDate())
   const [titleValid, setTitleValid] = useState(true)
 
-  const [formValues, setFormValues] = useState({
-    title: 'Evento',
-    notes: '',
-    start: now.toDate(),
-    end: nowPlusOne.toDate(),
-  })
+  const [formValues, setFormValues] = useState(initValue)
 
   const { title, notes, start, end } = formValues
+
+  useEffect(() => {
+    if (!!activeEvent) {
+      setFormValues(activeEvent)
+    }
+  }, [activeEvent, setFormValues])
+
 
   const handleInputChange = ({ target }) => {
     setFormValues({
@@ -48,8 +59,9 @@ export const CalendarModal = () => {
   }
 
   const closeModal = () => {
-    console.log('cerrar modal')
     dispatch(setCloseModal())
+    dispatch(eventClearActiveNote())
+    setFormValues(initValue)
   }
   const handleStartDateChange = (e) => {
     setDateStart(e)
@@ -81,6 +93,15 @@ export const CalendarModal = () => {
     }
 
     //TODO: realizar validacion en bdd
+
+    dispatch(eventAddNew({
+      ...formValues,
+      id: new Date().getTime(),
+      user: {
+        _id: 1234,
+        name: 'Marta',
+      }
+    }))
 
     setTitleValid(true)
     closeModal()

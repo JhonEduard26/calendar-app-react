@@ -1,34 +1,23 @@
 import { useState } from 'react'
 import moment from 'moment'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { CalendarEvent } from './CalendarEvent'
 import { Navbar } from '../ui/Navbar'
 import { messages } from '../../helpers/calendar-es-messages'
 import { CalendarModal } from './CalendarModal'
+import { setOpenModal } from '../../actions/ui'
+import { eventSetActive } from '../../actions/events'
+import { AddNewFab } from '../ui/AddNewFab'
 
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import 'moment/locale/es'
-import { setOpenModal } from '../../actions/ui'
 
 const localizer = momentLocalizer(moment)
 
-moment.locale('es')
-
-const events = [{
-  title: 'Cumpleaños',
-  start: moment().toDate(),
-  end: moment().add(2, 'hours').toDate(),
-  notes: 'comprar el pastel',
-  user: {
-    uid: 123,
-    name: 'Jhon',
-  }
-}]
-
 export const CalendarScreen = () => {
   const dispatch = useDispatch()
+  const { events } = useSelector(state => state.calendar)
 
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
 
@@ -37,7 +26,7 @@ export const CalendarScreen = () => {
   }
 
   const onSelect = (e) => {
-    console.log(e)
+    dispatch(eventSetActive(e))
   }
 
   const onViewChange = (e) => {
@@ -76,6 +65,7 @@ export const CalendarScreen = () => {
           event: CalendarEvent
         }}
       />
+      <AddNewFab />
       <CalendarModal />
     </>
   )
