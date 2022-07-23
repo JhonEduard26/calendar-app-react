@@ -6,7 +6,7 @@ import moment from 'moment'
 import Swal from 'sweetalert2'
 
 import { setCloseModal } from '../../actions/ui'
-import { eventClearActiveNote, eventStartAddNew, eventUpdated } from '../../actions/events'
+import { eventClearActiveNote, eventStartAddNew, eventStartUpdated } from '../../actions/events'
 
 const customStyles = {
   content: {
@@ -94,10 +94,8 @@ export const CalendarModal = () => {
       return setTitleValid(false)
     }
 
-    //TODO: realizar validacion en bdd
-
     if (!!activeEvent) {
-      dispatch(eventUpdated(formValues))
+      dispatch(eventStartUpdated(formValues))
     } else {
       dispatch(eventStartAddNew(formValues))
     }
